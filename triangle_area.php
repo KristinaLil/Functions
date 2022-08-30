@@ -50,8 +50,8 @@
                             $c = $_POST['c'];
                             
                             if (($a + $b > $c) &&
-                                ($a + $b > $c) &&
-                                ($a + $b > $c)
+                                ($b + $c > $a) &&
+                                ($a + $c > $b)
                             ) {
                                 echo triangleArea($a, $b, $c);
                             } else {
