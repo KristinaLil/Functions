@@ -12,13 +12,13 @@
 <body>
 
     <div class="container">
-    <h1>Ads</h1>
+        <h1>Ads</h1>
         <ul class="nav">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="triangle_area.php">Triangle area</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="ads.php?orderBy=id&d=DESC">Ads</a>
+                <a class="nav-link" href="ads.php">Ads</a>
             </li>
         </ul>
         <div class="row">
@@ -28,65 +28,86 @@
                     <div class="card-body">
 
                         <?php include "data.php"; ?>
-                        <?php $d = $_GET['d']; ?>
+                        <?php
 
+                        $d = '';
+                        if (isset($_GET['d'])) {
+                            $d = $_GET['d'];
+                        }
+                        $orderBy = '';
+                        if (isset($_GET['orderBy'])) {
+                            $orderBy = $_GET['orderBy'];
+                        }
+
+                        usort($skelbimai, function ($a, $b) use ($orderBy) {
+                            global $d;
+                            if ($d == 'DESC') {
+                                return $b[$orderBy] <=> $a[$orderBy];
+                            } else if ($d == 'ASC') {
+                                return $a[$orderBy] <=> $b[$orderBy];
+                            }
+                        });
+
+                        ?>
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th>
 
-                                        <?php if ($d == "ASC") { ?>
-                                            <a href="ads.php?orderBy=id&d=DESC">ID &uparrow;</a>
+                                        <?php if ($orderBy == 'id') { ?>
+                                            <?php if ($d == "ASC") { ?>
+                                                <a href="ads.php?orderBy=id&d=DESC"> ID &uparrow;</a>
+                                            <?php } else { ?>
+                                                <a href="ads.php?orderBy=id&d=ASC"> ID &downarrow;</a>
+                                            <?php } ?>
                                         <?php } else { ?>
-                                            <a href="ads.php?orderBy=id&d=ASC">ID &downarrow;</a>
+                                            <a href="ads.php?orderBy=id&d=ASC"> ID </a>
                                         <?php } ?>
 
                                     </th>
                                     <th>
 
-                                        <?php if ($d == "ASC") { ?>
-                                            <a href="ads.php?orderBy=text&d=DESC"> INFO &uparrow;</a>
+                                        <?php if ($orderBy == 'text') { ?>
+                                            <?php if ($d == "ASC") { ?>
+                                                <a href="ads.php?orderBy=text&d=DESC"> INFO &uparrow;</a>
+                                            <?php } else { ?>
+                                                <a href="ads.php?orderBy=text&d=ASC"> INFO &downarrow;</a>
+                                            <?php } ?>
                                         <?php } else { ?>
-                                            <a href="ads.php?orderBy=text&d=ASC"> INFO &downarrow;</a>
+                                            <a href="ads.php?orderBy=text&d=ASC"> INFO </a>
                                         <?php } ?>
 
                                     </th>
                                     <th>
 
-                                        <?php if ($d == "ASC") { ?>
-                                            <a href="ads.php?orderBy=cost&d=DESC">Cost (EUR) &uparrow; </a>
+                                        <?php if ($orderBy == 'cost') { ?>
+                                            <?php if ($d == "ASC") { ?>
+                                                <a href="ads.php?orderBy=cost&d=DESC"> COST &uparrow;</a>
+                                            <?php } else { ?>
+                                                <a href="ads.php?orderBy=cost&d=ASC"> COST &downarrow;</a>
+                                            <?php } ?>
                                         <?php } else { ?>
-                                            <a href="ads.php?orderBy=cost&d=ASC">Cost (EUR) &downarrow; </a>
+                                            <a href="ads.php?orderBy=cost&d=ASC"> COST </a>
                                         <?php } ?>
 
                                     </th>
                                     <th>
 
-                                        <?php if ($d == "ASC") { ?>
-                                            <a href="ads.php?orderBy=onPay&d=DESC">Time &uparrow; </a>
+                                        <?php if ($orderBy == 'onPay') { ?>
+                                            <?php if ($d == "ASC") { ?>
+                                                <a href="ads.php?orderBy=onPay&d=DESC"> TIME &uparrow;</a>
+                                            <?php } else { ?>
+                                                <a href="ads.php?orderBy=onPay&d=ASC"> TIME &downarrow;</a>
+                                            <?php } ?>
                                         <?php } else { ?>
-                                            <a href="ads.php?orderBy=onPay&d=ASC">Time &downarrow; </a>
+                                            <a href="ads.php?orderBy=onPay&d=ASC"> TIME </a>
                                         <?php } ?>
+
                                     </th>
-
-                                    <?php
-
-                                    $d = $_GET['d'];
-                                    $order = $_GET['orderBy'];
-
-                                    usort($skelbimai, function ($a, $b) use ($order) {
-                                        global $d;
-                                        if ($d == 'DESC') {
-                                            return $b[$order] <=> $a[$order];
-                                        } else if ($d == 'ASC') {
-                                            return $a[$order] <=> $b[$order];
-                                        }
-                                    });
-
-                                    ?>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 <?php foreach ($skelbimai as $ad) { ?>
                                     <tr>
                                         <td><?= $ad['id'] ?></td>
@@ -100,8 +121,8 @@
                                             } else {
                                                 echo "Not paid";
                                             }
-
                                             ?>
+
                                         </td>
                                     </tr>
                                 <?php } ?>
